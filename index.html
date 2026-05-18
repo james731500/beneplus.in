@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Beneplus — Software, built well.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0E18" />
+<meta name="description" content="Beneplus is an AI-native software studio. We build mobile, web, blockchain and emerging-tech products with founders and teams who care about craft." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #0A0E18;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    color: #F2EFE6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: #FF5A35; color: #0A0E18; }
+  a { color: inherit; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="brand.jsx"></script>
+<script type="text/babel" src="site.jsx"></script>
+<script type="text/babel">
+
+/* ─── HERO ───────────────────────────────────────────────── */
+function Hero() {
+  const isMobile = useMediaQuery('(max-width: 1000px)');
+  return (
+    <section style={{
+      background: C.ink, color: C.text,
+      padding: isMobile ? '40px 22px 80px' : '80px 40px 140px',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      <Glow color={C.accent} position="80% 30%" size="60%" opacity={0.22} />
+      <Glow color="#5B7CFF" position="10% 80%" size="50%" opacity={0.12} />
+      <Grain opacity={0.06} />
+
+      <div className="bp-hero" style={{
+        maxWidth: 1240, margin: '0 auto', position: 'relative', zIndex: 2,
+      }}>
+        <Reveal>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '6px 12px', borderRadius: 999,
+            background: 'rgba(255, 90, 53, 0.08)',
+            border: `1px solid ${C.accent}33`,
+            fontFamily: MONO, fontSize: 11, letterSpacing: '0.16em',
+            color: C.accent, fontWeight: 500, marginBottom: 28,
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: C.accent, boxShadow: `0 0 8px ${C.accent}`,
+            }} />
+            AI-POWERED SOFTWARE STUDIO
+          </div>
+
+          <h1 className="bp-h1" style={{ color: C.text, fontSize: 'clamp(48px, 9vw, 120px)' }}>
+            AI-powered<br />
+            software,<br />
+            <span style={{
+              background: `linear-gradient(120deg, ${C.text} 0%, ${C.accent} 60%)`,
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>shipped faster.</span>
+          </h1>
+
+          <p style={{
+            fontSize: 18, lineHeight: 1.6, color: C.textDim,
+            maxWidth: 540, marginTop: 32, fontWeight: 400,
+          }}>
+            Beneplus is a software studio that builds AI-native products
+            with founders and teams. We deliver in less time and at lower
+            cost — without compromising on craft. Mobile, web, blockchain,
+            and everything in between.
+          </p>
+
+          <div style={{ display: 'flex', gap: 12, marginTop: 36, flexWrap: 'wrap' }}>
+            <a href="contact.html" className="bp-btn" style={{
+              background: C.accent, color: C.ink,
+              boxShadow: `0 12px 28px -8px ${C.accent}55`,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 16px 36px -8px ${C.accent}88`; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `0 12px 28px -8px ${C.accent}55`; }}
+            >Book an intro call <span style={{ fontFamily: MONO }}>→</span></a>
+            <a href="portfolio.html" className="bp-btn" style={{
+              border: `1px solid ${C.ink4}`,
+              color: C.text, background: 'transparent', fontWeight: 500,
+            }}>See selected work</a>
+          </div>
+        </Reveal>
+
+        <Reveal delay={120} className="bp-hero-mark" style={{
+          display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-end', gap: 28,
+        }}>
+          <Mark size={isMobile ? 200 : 260} ink={C.bone} accent={C.accent} animated glow />
+          {!isMobile && (
+            <div style={{ position: 'relative' }}>
+              <CodeWindow width={520} height={340} />
+            </div>
+          )}
+        </Reveal>
+      </div>
+
+      {/* trust strip */}
+      <Reveal style={{
+        maxWidth: 1240, margin: isMobile ? '60px auto 0' : '120px auto 0', position: 'relative', zIndex: 2,
+        padding: '32px 0', borderTop: `1px solid ${C.ink3}`, borderBottom: `1px solid ${C.ink3}`,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        flexWrap: 'wrap', gap: 20,
+      }}>
+        <Eye color={C.textDim}>Trusted by teams at</Eye>
+        {['Northwind', 'Helios', 'Lumen Labs', 'Foundry/9', 'Quanta', 'Greylock', 'Avant'].map((n) => (
+          <span key={n} style={{
+            fontFamily: DISPLAY, fontSize: 17, fontWeight: 600,
+            letterSpacing: '-0.02em', color: C.text, opacity: 0.55,
+            transition: 'opacity 180ms ease',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+          onMouseLeave={(e) => e.currentTarget.style.opacity = 0.55}
+          >{n}</span>
+        ))}
+      </Reveal>
+    </section>
+  );
+}
+
+/* ─── METRICS RIBBON ─────────────────────────────────────── */
+function Metrics() {
+  const isMobile = useMediaQuery('(max-width: 700px)');
+  const stats = [
+    ['268',   'projects shipped'],
+    ['8',     'practices'],
+    ['16',    'industries'],
+    ['7 yrs', 'avg engagement'],
+  ];
+  return (
+    <section style={{
+      background: C.ink, color: C.text,
+      padding: isMobile ? '0 22px 60px' : '0 40px 100px',
+    }}>
+      <div className="bp-grid bp-grid-4" style={{ maxWidth: 1240, margin: '0 auto', gap: isMobile ? 24 : 24 }}>
+        {stats.map(([v, l], i) => (
+          <Reveal key={l} delay={i * 80} style={{
+            padding: '28px 0',
+            borderLeft: (i === 0 || isMobile) ? 'none' : `1px solid ${C.ink3}`,
+            paddingLeft: (i === 0 || isMobile) ? 0 : 28,
+          }}>
+            <div style={{
+              fontFamily: DISPLAY, fontSize: 'clamp(54px, 6vw, 96px)',
+              fontWeight: 700, lineHeight: 1, letterSpacing: '-0.05em',
+              color: C.text,
+            }}>{v}</div>
+            <div style={{
+              fontFamily: MONO, fontSize: 11, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: C.textDim, fontWeight: 500,
+              marginTop: 14,
+            }}>{l}</div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── WHAT WE BUILD ─────────────────────────────────────── */
+function WhatWeBuild() {
+  const cats = [
+    ['mobile',     'Mobile apps',         'iOS · Android · Flutter · cross-platform',           '40+', '#mobile'],
+    ['web',        'Web development',     'Custom · Shopify · Magento · headless commerce',     '25+', '#web'],
+    ['software',   'Software',            'Custom software · consulting · APIs · integrations', '50+', '#software'],
+    ['blockchain', 'Blockchain & Web3',   'DApps · NFTs · DeFi · smart contracts · wallets',    '20+', '#blockchain'],
+    ['product',    'Product & design',    'MVP · UX · UI · design systems · prototyping',       '30+', '#product'],
+    ['games',      'Game development',    'Unity · Unreal · 2D/3D · multiplayer · Web3',        '15+', '#games'],
+    ['cloud',      'Cloud & DevOps',      'AWS · cloud migration · strategy · DevOps',          '35+', '#cloud'],
+    ['emerging',   'Emerging tech',       'AR · VR · IoT · AI · Metaverse',                     '20+', '#emerging'],
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.ink2, color: C.text, position: 'relative', overflow: 'hidden' }}>
+      <Glow color={C.accent} position="100% 0%" size="40%" opacity={0.1} />
+      <div style={{ maxWidth: 1240, margin: '0 auto', position: 'relative' }}>
+        <Reveal>
+          <Eye color={C.accent}>What we build</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.text, margin: '24px 0 0', maxWidth: 760 }}>
+            Eight practices.<br />One studio.
+          </h2>
+          <p style={{
+            fontSize: 18, lineHeight: 1.55, color: C.textDim,
+            maxWidth: 540, marginTop: 22, fontWeight: 400,
+          }}>
+            We organize the work into eight tightly-staffed practices. Most engagements draw from two or three.
+          </p>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-4" style={{ marginTop: 56, gap: 16 }}>
+          {cats.map(([iconName, t, sub, count, anchor], i) => (
+            <Reveal key={t} delay={i * 50} as="a" {...{ href: `services.html${anchor}` }} style={{
+              background: C.ink, borderRadius: 14, padding: 26,
+              display: 'flex', flexDirection: 'column', gap: 18,
+              textDecoration: 'none', color: C.text, position: 'relative',
+              border: `1px solid ${C.ink3}`,
+              minHeight: 240,
+              transition: 'transform 240ms ease, border-color 240ms ease, background 240ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = C.accent;
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.background = C.ink2;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = C.ink3;
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.background = C.ink;
+            }}
+            >
+              <Icon name={iconName} size={52} color={C.bone} accent={C.accent} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em' }}>{t}</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: 13, color: C.textDim, marginTop: 8, lineHeight: 1.45 }}>{sub}</div>
+              </div>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: C.textDim,
+              }}>
+                <span>{count} projects</span>
+                <span style={{ color: C.accent }}>→</span>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── INDUSTRIES STRIP ─────────────────────────────────── */
+function IndustriesStrip() {
+  const items = [
+    ['automotive',    'Automotive'],
+    ['b2b',           'B2B Software'],
+    ['healthcare',    'Healthcare'],
+    ['education',     'Education'],
+    ['ecommerce',     'Ecommerce'],
+    ['food',          'Food'],
+    ['travel',        'Travel'],
+    ['fashion',       'Fashion & Apparel'],
+    ['crm',           'CRM Development'],
+    ['logistics',     'Logistics'],
+    ['manufacturing', 'Manufacturing'],
+    ['legal',         'Legal'],
+    ['agriculture',   'Agriculture'],
+    ['finance',       'Finance'],
+    ['realestate',    'Real Estate'],
+    ['hospitality',   'Hospitality'],
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.bone, color: C.ink }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal className="bp-row">
+          <div>
+            <Eye>Industries</Eye>
+            <h2 className="bp-h2-xl" style={{ color: C.ink, margin: '24px 0 0', maxWidth: 760 }}>
+              Sixteen industries.<br />Shipped in.
+            </h2>
+          </div>
+          <a href="industries.html" style={{
+            fontFamily: MONO, fontSize: 13, letterSpacing: '0.08em',
+            color: C.ink, textDecoration: 'none', fontWeight: 500,
+          }}>SEE ALL →</a>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-4" style={{ marginTop: 48, gap: 14 }}>
+          {items.map(([iconName, n], i) => (
+            <Reveal key={n} delay={i * 30} as="a" {...{ href: 'industries.html' }} style={{
+              background: C.paper, borderRadius: 12, padding: '20px 20px',
+              textDecoration: 'none', color: C.ink,
+              display: 'flex', alignItems: 'center', gap: 16,
+              border: `1px solid ${C.ink}10`,
+              transition: 'background 220ms ease, transform 220ms ease, border-color 220ms ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = C.bone2; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = C.accent + '55'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = C.paper; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = C.ink + '10'; }}
+            >
+              <Icon name={iconName} size={44} color={C.ink} accent={C.accent} />
+              <div>
+                <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 600, letterSpacing: '-0.015em' }}>{n}</div>
+                <div style={{ fontFamily: MONO, fontSize: 10, color: C.mute, marginTop: 2, letterSpacing: '0.08em' }}>0{i+1}</div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── FEATURED WORK ──────────────────────────────────────── */
+function FeaturedWork() {
+  const work = [
+    {
+      label: 'Northwind · Logistics platform',
+      title: 'Real-time fleet tracking, rebuilt.',
+      tag:   'MOBILE · CLOUD',
+      bg:    C.ink2,
+    },
+    {
+      label: 'Helios · DeFi exchange',
+      title: 'A non-custodial DEX, audited and live.',
+      tag:   'BLOCKCHAIN · WEB',
+      bg:    C.accent,
+      fg:    C.ink,
+    },
+    {
+      label: 'Lumen Labs · Healthcare SaaS',
+      title: 'Patient intake, from 9 minutes to 2.',
+      tag:   'SOFTWARE · PRODUCT',
+      bg:    C.ink2,
+    },
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.ink, color: C.text, position: 'relative', overflow: 'hidden' }}>
+      <Glow color={C.accent} position="50% 0%" size="50%" opacity={0.08} />
+      <div style={{ maxWidth: 1240, margin: '0 auto', position: 'relative' }}>
+        <Reveal className="bp-row">
+          <div>
+            <Eye color={C.accent}>Selected work</Eye>
+            <h2 className="bp-h2-xl" style={{ color: C.text, margin: '24px 0 0', maxWidth: 760 }}>
+              The proof.
+            </h2>
+          </div>
+          <a href="portfolio.html" style={{
+            fontFamily: MONO, fontSize: 13, letterSpacing: '0.08em',
+            color: C.text, textDecoration: 'none', fontWeight: 500,
+          }}>ALL CASE STUDIES →</a>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-3" style={{ marginTop: 48, gap: 18 }}>
+          {work.map((w, i) => {
+            const fg = w.fg || C.text;
+            return (
+              <Reveal key={i} delay={i * 100} as="a" {...{ href: 'portfolio.html' }} style={{
+                background: w.bg, color: fg,
+                borderRadius: 16, padding: 32, minHeight: 360,
+                display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                textDecoration: 'none', position: 'relative', overflow: 'hidden',
+                border: w.bg === C.ink2 ? `1px solid ${C.ink3}` : 'none',
+                transition: 'transform 240ms ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{
+                  fontFamily: MONO, fontSize: 11, letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: w.bg === C.accent ? C.ink : C.accent, fontWeight: 600,
+                }}>{w.label}</div>
+                <div style={{
+                  position: 'absolute', right: -40, top: -40, opacity: 0.6,
+                }}>
+                  <Mark size={200} ink={w.bg === C.accent ? C.ink : C.bone} accent={w.bg === C.accent ? C.bone : C.accent} />
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <div style={{
+                    fontFamily: DISPLAY, fontSize: 26, fontWeight: 600, lineHeight: 1.1,
+                    letterSpacing: '-0.03em', maxWidth: 320, color: fg,
+                  }}>{w.title}</div>
+                  <div style={{
+                    marginTop: 16, fontFamily: MONO, fontSize: 11,
+                    letterSpacing: '0.1em', color: fg, opacity: 0.7,
+                  }}>{w.tag} · READ CASE →</div>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── HOW WE WORK ──────────────────────────────────────────── */
+function HowWeWork() {
+  const steps = [
+    ['01', 'Discover', 'A free, 45-minute call to understand the problem. We write up what we heard and what we\'d do about it.'],
+    ['02', 'Define',   'A two-week paid discovery: scope, architecture, milestones, fixed cost. You leave with a plan, regardless of who builds it.'],
+    ['03', 'Deliver',  'Weekly demos, weekly invoices. Production-grade from week one. Hand-off to your team, or stay on for ongoing care.'],
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.bone, color: C.ink }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye>How we work</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.ink, margin: '24px 0 0', maxWidth: 760 }}>
+            Three steps.<br />No surprises.
+          </h2>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-3" style={{ marginTop: 56, gap: 18 }}>
+          {steps.map(([n, t, b], i) => (
+            <Reveal key={n} delay={i * 100} style={{
+              background: C.paper, borderRadius: 16, padding: 32,
+              border: `1px solid ${C.ink}10`,
+              display: 'flex', flexDirection: 'column', gap: 16,
+              minHeight: 280, position: 'relative', overflow: 'hidden',
+              transition: 'border-color 220ms ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = C.accent + '55'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = C.ink + '10'}
+            >
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 80, fontWeight: 700, lineHeight: 0.9,
+                color: C.accent, letterSpacing: '-0.05em',
+                position: 'absolute', right: 24, bottom: 18, opacity: 0.1,
+              }}>{n}</div>
+              <div style={{
+                fontFamily: MONO, fontSize: 11, letterSpacing: '0.16em',
+                color: C.accent, fontWeight: 600,
+              }}>STEP {n}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 34, fontWeight: 700,
+                letterSpacing: '-0.04em', color: C.ink,
+              }}>{t}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 15, lineHeight: 1.6, color: C.mute, fontWeight: 400,
+              }}>{b}</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── CTA ──────────────────────────────────────────────────── */
+function CTA() {
+  return (
+    <section style={{ background: C.ink, padding: '120px 22px', color: C.text, position: 'relative', overflow: 'hidden' }}>
+      <Glow color={C.accent} position="50% 60%" size="60%" opacity={0.28} />
+      <Grain opacity={0.06} />
+      <div style={{
+        maxWidth: 1240, margin: '0 auto', position: 'relative', zIndex: 2,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 28,
+      }}>
+        <Reveal style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
+          <Mark size={110} ink={C.bone} accent={C.accent} animated glow />
+          <Eye color={C.accent}>// the plus is the point</Eye>
+          <h2 style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(54px, 10vw, 140px)', lineHeight: 0.9,
+            fontWeight: 700, letterSpacing: '-0.05em', margin: 0, color: C.text, maxWidth: 1100,
+          }}>
+            Got something<br />
+            <span style={{
+              background: `linear-gradient(120deg, ${C.text} 0%, ${C.accent} 80%)`,
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>to build?</span>
+          </h2>
+          <p style={{
+            fontSize: 19, lineHeight: 1.55, color: C.textDim,
+            maxWidth: 560, fontWeight: 400, margin: 0,
+          }}>
+            Tell us about it. Most projects start with a 45-minute call — no slide deck, no sales team, just engineers and designers.
+          </p>
+          <a href="contact.html" className="bp-btn" style={{
+            background: C.accent, color: C.ink,
+            padding: '18px 30px', fontSize: 17, marginTop: 8,
+            boxShadow: `0 16px 36px -8px ${C.accent}66`,
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.boxShadow = `0 24px 48px -8px ${C.accent}99`}
+          onMouseLeave={(e) => e.currentTarget.style.boxShadow = `0 16px 36px -8px ${C.accent}66`}
+          >Schedule a call <span style={{ fontFamily: MONO }}>→</span></a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────── */
+function App() {
+  return (
+    <div style={{ background: C.ink, color: C.text, fontFamily: DISPLAY, minHeight: '100vh' }}>
+      <Nav active="" variant="dark" />
+      <main>
+        <Hero />
+        <Metrics />
+        <WhatWeBuild />
+        <IndustriesStrip />
+        <FeaturedWork />
+        <HowWeWork />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

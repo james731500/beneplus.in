@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Portfolio — Beneplus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#EEEAE0" />
+<meta name="description" content="Eight selected projects from the last three years — each shipped, in production, and still in use by the team it was built with." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #EEEAE0;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    color: #0A0E18;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: #FF5A35; color: #EEEAE0; }
+  /* horizontal scroll for filter pills on mobile */
+  .bp-filters {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  @media (max-width: 640px) {
+    .bp-filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px;
+      scrollbar-width: none; -ms-overflow-style: none; }
+    .bp-filters::-webkit-scrollbar { display: none; }
+    .bp-filters > button { flex-shrink: 0; }
+    .bp-filters > .bp-spacer { display: none; }
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="brand.jsx"></script>
+<script type="text/babel" src="site.jsx"></script>
+<script type="text/babel">
+
+const FILTERS = ['All work', 'Mobile', 'Web', 'Software', 'Blockchain', 'Product', 'Cloud'];
+
+const CASES = [
+  {
+    id: 'northwind',
+    client: 'Northwind',
+    sector: 'Logistics',
+    title: 'Real-time fleet tracking, rebuilt from the ground up.',
+    summary: 'Replaced a 9-year-old monolith with a mobile-first platform across 1,400 vehicles.',
+    metrics: [['11 weeks', 'discovery → live'], ['18%', 'fuel cost reduction'], ['1.4k', 'vehicles tracked']],
+    tags: ['Mobile', 'Cloud', 'IoT'],
+    glyph: 0,
+    bg: C.slate, fg: C.bone, accent: C.vermillion,
+    featured: true,
+  },
+  {
+    id: 'helios',
+    client: 'Helios',
+    sector: 'DeFi',
+    title: 'A non-custodial DEX, audited and live.',
+    summary: 'Built the protocol, the smart contracts, and the consumer app — shipped in 14 weeks.',
+    metrics: [['$92M', 'TVL at launch'], ['0', 'audit critical'], ['14 wks', 'to mainnet']],
+    tags: ['Blockchain', 'Web'],
+    glyph: 1,
+    bg: C.vermillion, fg: C.slate, accent: C.slate,
+  },
+  {
+    id: 'lumen',
+    client: 'Lumen Labs',
+    sector: 'Healthcare',
+    title: 'Patient intake, from nine minutes to two.',
+    summary: 'HIPAA-grade intake flow with smart pre-fill, EHR integration, and accessibility audits.',
+    metrics: [['9m → 2m', 'intake time'], ['HIPAA', 'cert · 3wks'], ['46%', 'no-show drop']],
+    tags: ['Software', 'Product'],
+    glyph: 2,
+    bg: C.paper, fg: C.slate, accent: C.vermillion,
+  },
+  {
+    id: 'foundry9',
+    client: 'Foundry/9',
+    sector: 'Manufacturing',
+    title: 'A factory-floor MES, hand-built around the operators.',
+    summary: 'Floor tablets, IoT sensor mesh, and a dashboard the line leads actually use.',
+    metrics: [['11', 'sites onboarded'], ['3.2k', 'sensor points'], ['—', 'no unplanned downtime QTD']],
+    tags: ['Software', 'IoT'],
+    glyph: 3,
+    bg: C.slate2, fg: C.bone, accent: C.vermillion,
+  },
+  {
+    id: 'quanta',
+    client: 'Quanta',
+    sector: 'Fintech',
+    title: 'A wallet that thinks in fiat, settles in crypto.',
+    summary: 'Hybrid custodial / non-custodial wallet with on-ramps in 14 countries and a clean app store entry.',
+    metrics: [['14', 'fiat on-ramps'], ['260k', 'monthly actives'], ['4.8★', 'app store']],
+    tags: ['Mobile', 'Blockchain'],
+    glyph: 4,
+    bg: C.slate, fg: C.bone, accent: C.vermillion,
+  },
+  {
+    id: 'greylock',
+    client: 'Greylock',
+    sector: 'B2B Software',
+    title: 'CRM, written for the team that has to use it.',
+    summary: 'Replaced a forced-Salesforce rollout with a focused internal tool — adopted in eight weeks.',
+    metrics: [['8 wks', 'to full adoption'], ['72%', 'less data entry'], ['9.1', 'CSAT']],
+    tags: ['Software', 'B2B'],
+    glyph: 5,
+    bg: C.paper, fg: C.slate, accent: C.vermillion,
+  },
+  {
+    id: 'avant',
+    client: 'Avant',
+    sector: 'Fashion & Apparel',
+    title: 'A headless storefront that ships drops in fifteen minutes.',
+    summary: 'Headless Shopify rebuild with a custom drop scheduler, queue system, and AR try-on.',
+    metrics: [['15 min', 'drop turnaround'], ['+38%', 'conversion'], ['AR', 'try-on shipped']],
+    tags: ['Web', 'Ecommerce'],
+    glyph: 6,
+    bg: C.slate, fg: C.bone, accent: C.vermillion,
+  },
+  {
+    id: 'atlas',
+    client: 'Atlas',
+    sector: 'Travel',
+    title: 'A booking flow that doesn\'t make you start over.',
+    summary: 'Itinerary-first design with deep OTA integrations across air, rail, and stay.',
+    metrics: [['6', 'OTA integrations'], ['+22%', 'completion'], ['1.2M', 'itineraries']],
+    tags: ['Web', 'Mobile'],
+    glyph: 7,
+    bg: C.slate2, fg: C.bone, accent: C.vermillion,
+  },
+];
+
+/* ─── Hero ─────────────────────────────────────────────────── */
+function Hero() {
+  const [filter, setFilter] = React.useState(0);
+  return (
+    <section style={{ background: C.bone, padding: '60px 22px 40px' }}>
+      <div className="bp-hero" style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.vermillion}>Portfolio</Eye>
+          <h1 className="bp-h1" style={{ color: C.slate, margin: '24px 0 0', maxWidth: 880 }}>
+            Selected work.<br />Receipts attached.
+          </h1>
+          <p style={{
+            fontSize: 19, lineHeight: 1.55, color: C.mute,
+            maxWidth: 540, marginTop: 28, fontWeight: 400,
+          }}>
+            Eight projects from the last three years, picked to span the practices. Each one shipped, each one in production, each one with the team it was built with still using it.
+          </p>
+        </Reveal>
+        <Reveal delay={120} className="bp-hero-mark" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Mark size={260} animated />
+        </Reveal>
+      </div>
+
+      {/* filter pills */}
+      <Reveal style={{ maxWidth: 1240, margin: '48px auto 0' }}>
+        <div className="bp-filters">
+          {FILTERS.map((f, i) => (
+            <button key={f} onClick={() => setFilter(i)} className="bp-tap" style={{
+              padding: '10px 18px', borderRadius: 999,
+              border: `1px solid ${C.slate}22`,
+              background: i === filter ? C.slate : 'transparent',
+              color: i === filter ? C.bone : C.slate,
+              fontFamily: DISPLAY, fontSize: 13, fontWeight: 500, cursor: 'pointer',
+              letterSpacing: '-0.005em', whiteSpace: 'nowrap',
+              transition: 'background 160ms ease, color 160ms ease',
+            }}>{f}</button>
+          ))}
+          <div className="bp-spacer" style={{ flex: 1 }} />
+          <span style={{
+            fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em',
+            color: C.mute, fontWeight: 500, alignSelf: 'center',
+          }}>{CASES.length} CASE STUDIES</span>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ─── Featured case (large hero card) ─────────────────────── */
+function Featured({ c }) {
+  const isMobile = useMediaQuery('(max-width: 900px)');
+  return (
+    <section style={{ background: C.bone, padding: '40px 22px 80px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal as="a" href={`#${c.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+          <div style={{
+            background: c.bg, color: c.fg, borderRadius: 18,
+            padding: isMobile ? 32 : 56, position: 'relative', overflow: 'hidden',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
+            gap: isMobile ? 32 : 40,
+            alignItems: 'center',
+            minHeight: isMobile ? 'auto' : 480,
+            transition: 'transform 280ms ease',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            {/* decorative big mark */}
+            <div style={{
+              position: 'absolute', right: -80, bottom: -80, opacity: 0.5,
+              display: isMobile ? 'none' : 'block',
+            }}>
+              <Mark size={420} ink={c.bg === C.slate ? C.slate2 : C.slate} accent={c.accent} />
+            </div>
+
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <div style={{
+                fontFamily: MONO, fontSize: 12, letterSpacing: '0.16em',
+                color: c.accent, fontWeight: 600, marginBottom: 22,
+              }}>FEATURED · {c.sector.toUpperCase()}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 32, fontWeight: 600,
+                letterSpacing: '-0.02em', color: c.fg, marginBottom: 10, lineHeight: 0.95,
+              }}>{c.client}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 'clamp(28px, 4.5vw, 52px)', fontWeight: 600, lineHeight: 1.05,
+                letterSpacing: '-0.035em', color: c.fg, maxWidth: 580,
+              }}>{c.title}</div>
+              <p style={{
+                fontSize: 17, lineHeight: 1.55, color: c.fg, opacity: 0.75,
+                maxWidth: 520, marginTop: 22, fontWeight: 400,
+              }}>{c.summary}</p>
+
+              <div style={{ display: 'flex', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
+                {c.tags.map((t) => (
+                  <span key={t} style={{
+                    padding: '5px 12px', borderRadius: 999,
+                    border: `1px solid ${c.fg}33`, color: c.fg,
+                    fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', fontWeight: 500,
+                  }}>{t}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{
+              position: 'relative', zIndex: 1,
+              display: 'flex', flexDirection: 'column', gap: 14,
+            }}>
+              {c.metrics.map(([v, l], i) => (
+                <div key={i} style={{
+                  background: c.bg === C.slate ? 'rgba(255,255,255,0.04)' : 'rgba(11,15,26,0.08)',
+                  borderRadius: 12, padding: '20px 24px',
+                  border: `1px solid ${c.fg}22`,
+                }}>
+                  <div style={{
+                    fontFamily: DISPLAY, fontSize: 'clamp(30px, 4vw, 42px)', fontWeight: 700,
+                    letterSpacing: '-0.035em', color: c.accent, lineHeight: 1,
+                  }}>{v}</div>
+                  <div style={{
+                    fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em',
+                    textTransform: 'uppercase', color: c.fg, opacity: 0.75,
+                    marginTop: 10, fontWeight: 500,
+                  }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Grid of remaining cases ─────────────────────────────── */
+function Grid({ cases }) {
+  return (
+    <section style={{ background: C.slate, padding: '80px 22px 120px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.vermillion}>More projects</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.bone, margin: '24px 0 48px', maxWidth: 760 }}>
+            Seven more.<br />Same shop.
+          </h2>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-2" style={{ gap: 18 }}>
+          {cases.map((c, i) => (
+            <Reveal key={c.id} delay={i * 80} as="a" href={`#${c.id}`} style={{
+              background: c.bg, color: c.fg, borderRadius: 14,
+              padding: 32, textDecoration: 'none',
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              minHeight: 340, position: 'relative', overflow: 'hidden',
+              border: c.bg === C.paper ? `1px solid ${C.slate}10` : `1px solid ${c.fg}10`,
+              transition: 'transform 240ms ease, border-color 240ms ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = c.accent + '88'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = c.bg === C.paper ? C.slate + '10' : c.fg + '10'; }}
+            >
+              <div style={{
+                position: 'absolute', right: -40, top: -40, opacity: 0.4,
+              }}>
+                <Mark size={200} ink={c.bg === C.paper ? C.slate : C.slate2} accent={c.accent} />
+              </div>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{
+                  fontFamily: MONO, fontSize: 11, letterSpacing: '0.16em',
+                  color: c.accent, fontWeight: 600,
+                }}>{c.sector.toUpperCase()} · {String(i + 2).padStart(2, '0')}</div>
+                <div style={{
+                  fontFamily: DISPLAY, fontSize: 26, fontWeight: 600,
+                  letterSpacing: '-0.02em', marginTop: 8, color: c.fg,
+                }}>{c.client}</div>
+                <div style={{
+                  fontFamily: DISPLAY, fontSize: 20, fontWeight: 600, lineHeight: 1.18,
+                  letterSpacing: '-0.02em', marginTop: 16, color: c.fg, maxWidth: 360,
+                }}>{c.title}</div>
+                <p style={{
+                  fontSize: 14, lineHeight: 1.55, color: c.fg, opacity: 0.7,
+                  marginTop: 12, fontWeight: 400, maxWidth: 380,
+                }}>{c.summary}</p>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {c.tags.map((t) => (
+                    <span key={t} style={{
+                      padding: '4px 10px', borderRadius: 999,
+                      border: `1px solid ${c.fg}33`, color: c.fg,
+                      fontFamily: MONO, fontSize: 10, letterSpacing: '0.06em', fontWeight: 500,
+                    }}>{t}</span>
+                  ))}
+                </div>
+                <span style={{
+                  fontFamily: MONO, fontSize: 11, color: c.accent, letterSpacing: '0.1em', fontWeight: 600,
+                }}>READ →</span>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Numbers strip ──────────────────────────────────────── */
+function Numbers() {
+  const stats = [
+    ['268', 'projects shipped'],
+    ['16', 'industries'],
+    ['8', 'practices'],
+    ['7 yrs', 'avg engagement'],
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.bone }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal><Eye>By the numbers</Eye></Reveal>
+        <div className="bp-grid bp-grid-4" style={{ marginTop: 36, gap: 18 }}>
+          {stats.map(([v, l], i) => (
+            <Reveal key={l} delay={i * 80} style={{
+              background: C.paper, borderRadius: 14, padding: '36px 28px',
+              border: `1px solid ${C.slate}10`,
+              transition: 'border-color 220ms ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = C.vermillion + '55'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = C.slate + '10'}
+            >
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 'clamp(54px, 6vw, 88px)', fontWeight: 700, lineHeight: 1,
+                letterSpacing: '-0.04em', color: C.slate,
+              }}>{v}</div>
+              <div style={{
+                fontFamily: MONO, fontSize: 11, letterSpacing: '0.14em',
+                textTransform: 'uppercase', color: C.mute, fontWeight: 500,
+                marginTop: 14,
+              }}>{l}</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── CTA ─────────────────────────────────────────────────── */
+function CTA() {
+  return (
+    <section style={{ background: C.vermillion, padding: '100px 22px', color: C.slate }}>
+      <div className="bp-split" style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.slate}>// what's next</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.slate, margin: '24px 0 0', maxWidth: 720 }}>
+            Yours, next quarter.
+          </h2>
+          <p style={{
+            fontSize: 19, lineHeight: 1.55, color: C.slate, opacity: 0.8,
+            maxWidth: 540, marginTop: 22, fontWeight: 400,
+          }}>
+            We take on a small number of new engagements each quarter. Tell us what you're building.
+          </p>
+        </Reveal>
+        <Reveal delay={120} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <a href="contact.html" className="bp-btn" style={{
+            background: C.slate, color: C.bone,
+            padding: '18px 28px', fontSize: 16,
+          }}>Get on the calendar <span style={{ fontFamily: MONO }}>→</span></a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  const featured = CASES.find((c) => c.featured) || CASES[0];
+  const rest = CASES.filter((c) => c !== featured);
+  return (
+    <PageShell active="portfolio">
+      <Hero />
+      <Featured c={featured} />
+      <Grid cases={rest} />
+      <Numbers />
+      <CTA />
+    </PageShell>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

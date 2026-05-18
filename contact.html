@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Schedule a call — Beneplus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#EEEAE0" />
+<meta name="description" content="Book a 45-minute call with an engineer and a designer. No slides, no sales team — just a clear next step." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #EEEAE0;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    color: #0A0E18;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: #FF5A35; color: #EEEAE0; }
+  input, textarea, select { font-family: inherit; }
+  button { cursor: pointer; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="brand.jsx"></script>
+<script type="text/babel" src="site.jsx"></script>
+<script type="text/babel">
+
+const TIME_SLOTS = [
+  '09:00', '09:30', '10:00', '10:30', '11:00',
+  '13:00', '13:30', '14:00', '14:30', '15:00',
+  '15:30', '16:00', '16:30', '17:00',
+];
+
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+function fmtDate(d) {
+  return `${DAY_NAMES[(d.getDay() + 6) % 7]} · ${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
+}
+
+/* ─── Calendar ─────────────────────────────────────────────── */
+function Calendar({ value, onChange }) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const start = new Date(today);
+  const wd = (start.getDay() + 6) % 7;
+  start.setDate(start.getDate() - wd);
+  const days = Array.from({ length: 35 }).map((_, i) => {
+    const d = new Date(start); d.setDate(start.getDate() + i); return d;
+  });
+  const month = days[14].getMonth();
+
+  return (
+    <div>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16,
+      }}>
+        <div style={{
+          fontFamily: DISPLAY, fontSize: 18, fontWeight: 600, letterSpacing: '-0.015em',
+        }}>{MONTH_NAMES[month]} {days[14].getFullYear()}</div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <button style={btnArrow}>←</button>
+          <button style={btnArrow}>→</button>
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 8 }}>
+        {DAY_NAMES.map((n) => (
+          <div key={n} style={{
+            fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em',
+            color: C.mute, fontWeight: 500, textAlign: 'center', padding: '6px 0',
+          }}>{n.toUpperCase()}</div>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
+        {days.map((d, i) => {
+          const past = d < today;
+          const weekend = d.getDay() === 0 || d.getDay() === 6;
+          const disabled = past || weekend;
+          const sel = value && d.toDateString() === value.toDateString();
+          const isToday = d.toDateString() === today.toDateString();
+          return (
+            <button
+              key={i}
+              disabled={disabled}
+              onClick={() => onChange(d)}
+              style={{
+                aspectRatio: '1 / 1', borderRadius: 8,
+                background: sel ? C.slate : 'transparent',
+                color: sel ? C.bone : (disabled ? `${C.slate}33` : C.slate),
+                border: isToday && !sel ? `1px solid ${C.vermillion}` : `1px solid transparent`,
+                fontFamily: DISPLAY, fontSize: 15, fontWeight: sel ? 600 : 500,
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                transition: 'background 120ms ease, color 120ms ease, transform 120ms ease',
+                position: 'relative',
+                minHeight: 38,
+              }}
+              onMouseEnter={(e) => { if (!disabled && !sel) { e.currentTarget.style.background = `${C.slate}10`; e.currentTarget.style.transform = 'scale(1.05)'; } }}
+              onMouseLeave={(e) => { if (!disabled && !sel) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'scale(1)'; } }}
+            >{d.getDate()}</button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const btnArrow = {
+  width: 32, height: 32, borderRadius: 8,
+  border: `1px solid ${C.slate}22`, background: 'transparent',
+  color: C.slate, fontFamily: MONO, fontSize: 14,
+};
+
+/* ─── Time slots ───────────────────────────────────────────── */
+function TimeSlots({ value, onChange, date }) {
+  const isMobile = useMediaQuery('(max-width: 520px)');
+  return (
+    <div>
+      <div style={{
+        fontFamily: MONO, fontSize: 11, letterSpacing: '0.16em',
+        textTransform: 'uppercase', color: C.vermillion, fontWeight: 600,
+        marginBottom: 16,
+      }}>Times available · {fmtDate(date)}</div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${isMobile ? 2 : 3}, 1fr)`,
+        gap: 8,
+      }}>
+        {TIME_SLOTS.map((t) => {
+          const sel = value === t;
+          const taken = ['10:30', '14:00', '16:30'].includes(t);
+          return (
+            <button
+              key={t}
+              disabled={taken}
+              onClick={() => onChange(t)}
+              className="bp-tap"
+              style={{
+                padding: '14px 10px', borderRadius: 8,
+                background: sel ? C.slate : (taken ? 'transparent' : C.paper),
+                color: sel ? C.bone : (taken ? `${C.slate}33` : C.slate),
+                border: sel ? `1px solid ${C.slate}` : `1px solid ${C.slate}18`,
+                fontFamily: DISPLAY, fontSize: 14, fontWeight: 600,
+                textDecoration: taken ? 'line-through' : 'none',
+                cursor: taken ? 'not-allowed' : 'pointer',
+                transition: 'background 120ms ease, border-color 120ms ease',
+              }}
+              onMouseEnter={(e) => { if (!taken && !sel) e.currentTarget.style.borderColor = C.slate; }}
+              onMouseLeave={(e) => { if (!taken && !sel) e.currentTarget.style.borderColor = `${C.slate}18`; }}
+            >{t}</button>
+          );
+        })}
+      </div>
+      <div style={{
+        fontFamily: MONO, fontSize: 11, color: C.mute,
+        marginTop: 16, letterSpacing: '0.06em',
+      }}>// timezone · UTC−07:00 · Pacific</div>
+    </div>
+  );
+}
+
+/* ─── Field / Input ────────────────────────────────────────── */
+function Field({ label, children }) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <span style={{
+        fontFamily: MONO, fontSize: 11, letterSpacing: '0.14em',
+        textTransform: 'uppercase', color: C.mute, fontWeight: 500,
+      }}>{label}</span>
+      {children}
+    </label>
+  );
+}
+const inputStyle = {
+  padding: '14px 16px', borderRadius: 8,
+  border: `1px solid ${C.slate}22`,
+  background: C.paper, color: C.slate,
+  fontFamily: DISPLAY, fontSize: 15, fontWeight: 500,
+  outline: 'none', width: '100%',
+  transition: 'border-color 160ms ease, background 160ms ease',
+};
+function Input(props) {
+  return <input {...props}
+    onFocus={(e) => e.target.style.borderColor = C.vermillion}
+    onBlur={(e) => e.target.style.borderColor = `${C.slate}22`}
+    style={{...inputStyle, ...(props.style || {})}} />;
+}
+function Textarea(props) {
+  return <textarea {...props} rows={4}
+    onFocus={(e) => e.target.style.borderColor = C.vermillion}
+    onBlur={(e) => e.target.style.borderColor = `${C.slate}22`}
+    style={{...inputStyle, fontFamily: DISPLAY, resize: 'vertical', ...(props.style || {})}} />;
+}
+
+/* ─── Pill selector ────────────────────────────────────────── */
+function PillGroup({ options, value, onChange, multi = false }) {
+  const isSel = (o) => multi ? value.includes(o) : value === o;
+  const toggle = (o) => {
+    if (multi) {
+      onChange(value.includes(o) ? value.filter((x) => x !== o) : [...value, o]);
+    } else {
+      onChange(o);
+    }
+  };
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+      {options.map((o) => (
+        <button key={o} type="button" onClick={() => toggle(o)} className="bp-tap" style={{
+          padding: '9px 14px', borderRadius: 999,
+          border: `1px solid ${C.slate}22`,
+          background: isSel(o) ? C.slate : 'transparent',
+          color: isSel(o) ? C.bone : C.slate,
+          fontFamily: DISPLAY, fontSize: 13, fontWeight: 500,
+          transition: 'background 120ms ease, transform 120ms ease',
+        }}>{o}</button>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Scheduler ────────────────────────────────────────────── */
+function Scheduler() {
+  const isMobile = useMediaQuery('(max-width: 600px)');
+  const [step, setStep] = React.useState(1);
+  const [date, setDate] = React.useState(null);
+  const [time, setTime] = React.useState(null);
+  const [services, setServices] = React.useState([]);
+  const [budget, setBudget] = React.useState(null);
+  const [form, setForm] = React.useState({ name: '', email: '', company: '', notes: '' });
+  const [submitting, setSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(null);
+
+  const stepLabels = ['Date', 'Time', 'Details', 'Confirmed'];
+
+  function next() {
+    if (step === 1 && date) setStep(2);
+    else if (step === 2 && time) setStep(3);
+    else if (step === 3) setStep(4);
+  }
+  function back() { if (step > 1 && step < 4) setStep(step - 1); }
+
+  async function submit(e) {
+    e.preventDefault();
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          company: form.company,
+          date: date ? fmtDate(date) : null,
+          time,
+          services,
+          budget,
+          notes: form.notes,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Could not save your message.');
+      setStep(4);
+    } catch (err) {
+      setSubmitError(err.message || 'Network error. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div style={{
+      background: C.bone, borderRadius: 18,
+      border: `1px solid ${C.slate}12`,
+      padding: isMobile ? 24 : 36,
+      boxShadow: '0 30px 60px -30px rgba(11,15,26,0.25)',
+    }}>
+      {/* progress strip */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 28 }}>
+        {[1,2,3,4].map((n) => (
+          <div key={n} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{
+              height: 3, borderRadius: 2,
+              background: step >= n ? C.vermillion : `${C.slate}18`,
+              transition: 'background 320ms ease',
+            }} />
+            <div style={{
+              fontFamily: MONO, fontSize: 10, letterSpacing: '0.14em',
+              color: step >= n ? C.slate : C.mute, fontWeight: 600,
+            }}>0{n}{!isMobile && ` · ${stepLabels[n - 1].toUpperCase()}`}</div>
+          </div>
+        ))}
+      </div>
+
+      {step === 1 && (
+        <div>
+          <div style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(24px, 4vw, 30px)', fontWeight: 700,
+            letterSpacing: '-0.025em', marginBottom: 6,
+          }}>Pick a day that works.</div>
+          <div style={{ color: C.mute, fontSize: 15, marginBottom: 24 }}>
+            Weekdays only · 45-minute intro call · free.
+          </div>
+          <Calendar value={date} onChange={setDate} />
+        </div>
+      )}
+
+      {step === 2 && (
+        <div>
+          <div style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(24px, 4vw, 30px)', fontWeight: 700,
+            letterSpacing: '-0.025em', marginBottom: 6,
+          }}>Pick a time.</div>
+          <div style={{ color: C.mute, fontSize: 15, marginBottom: 24 }}>
+            All times shown in your local timezone. We confirm by email.
+          </div>
+          <TimeSlots value={time} onChange={setTime} date={date} />
+        </div>
+      )}
+
+      {step === 3 && (
+        <form onSubmit={submit}>
+          <div style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(24px, 4vw, 30px)', fontWeight: 700,
+            letterSpacing: '-0.025em', marginBottom: 6,
+          }}>Tell us a little about it.</div>
+          <div style={{ color: C.mute, fontSize: 15, marginBottom: 24 }}>
+            We'll read this before the call so we don't waste your time.
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: 16, marginBottom: 16,
+          }}>
+            <Field label="Your name">
+              <Input value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} placeholder="Mira Tanaka" required />
+            </Field>
+            <Field label="Work email">
+              <Input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} placeholder="mira@company.com" required />
+            </Field>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <Field label="Company">
+              <Input value={form.company} onChange={(e) => setForm({...form, company: e.target.value})} placeholder="Company name" />
+            </Field>
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <Field label="What are we building? (pick any)">
+              <PillGroup
+                multi
+                value={services}
+                onChange={setServices}
+                options={['Mobile', 'Web', 'Software', 'Blockchain', 'Product / Design', 'Game', 'Cloud / DevOps', 'AI', 'Other']}
+              />
+            </Field>
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <Field label="Rough budget">
+              <PillGroup
+                value={budget}
+                onChange={setBudget}
+                options={['< $25k', '$25k–$75k', '$75k–$200k', '$200k–$500k', '$500k+', 'Not sure']}
+              />
+            </Field>
+          </div>
+
+          <div style={{ marginBottom: 28 }}>
+            <Field label="Anything else?">
+              <Textarea value={form.notes} onChange={(e) => setForm({...form, notes: e.target.value})} placeholder="Two or three sentences on the problem you're trying to solve." />
+            </Field>
+          </div>
+
+          {submitError && (
+            <div style={{
+              background: 'rgba(255, 90, 53, 0.10)',
+              border: `1px solid ${C.vermillion}66`,
+              color: C.vermillion,
+              padding: '12px 14px', borderRadius: 9, fontSize: 13,
+              fontFamily: MONO, letterSpacing: '0.01em', marginBottom: 14,
+            }}>{submitError}</div>
+          )}
+
+          <button type="submit" disabled={submitting} className="bp-btn" style={{
+            background: C.slate, color: C.bone,
+            padding: '16px 26px', width: '100%', justifyContent: 'center',
+            opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer',
+          }}>
+            {submitting ? 'Booking…' : <>Book the call <span style={{ fontFamily: MONO }}>→</span></>}
+          </button>
+        </form>
+      )}
+
+      {step === 4 && (
+        <div style={{ textAlign: 'center', padding: '20px 0', animation: 'bp-fade-up 600ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 22 }}>
+            <Mark size={110} ink={C.slate} accent={C.vermillion} animated glow />
+          </div>
+          <div style={{
+            fontFamily: MONO, fontSize: 11, letterSpacing: '0.16em',
+            color: C.vermillion, fontWeight: 600, marginBottom: 14,
+          }}>// confirmed</div>
+          <div style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 700,
+            letterSpacing: '-0.03em', marginBottom: 12,
+          }}>You're on the calendar.</div>
+          <div style={{ color: C.mute, fontSize: 16, maxWidth: 420, margin: '0 auto 24px', lineHeight: 1.55 }}>
+            We've sent a calendar invite to <strong style={{ color: C.slate }}>{form.email || 'your inbox'}</strong>. Expect a confirmation email within five minutes.
+          </div>
+          <div style={{
+            display: 'inline-block', padding: '16px 22px',
+            background: C.paper, borderRadius: 10, border: `1px solid ${C.slate}18`,
+            fontFamily: MONO, fontSize: 13, color: C.slate, letterSpacing: '0.04em',
+          }}>
+            {date && fmtDate(date)} · {time}
+          </div>
+        </div>
+      )}
+
+      {/* nav */}
+      {step !== 4 && (
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginTop: 32, paddingTop: 22, borderTop: `1px solid ${C.slate}10`,
+        }}>
+          <button onClick={back} disabled={step === 1} className="bp-tap" style={{
+            padding: '10px 16px', borderRadius: 8,
+            background: 'transparent', border: `1px solid ${C.slate}22`,
+            color: step === 1 ? `${C.slate}44` : C.slate,
+            fontFamily: DISPLAY, fontSize: 13, fontWeight: 500,
+            cursor: step === 1 ? 'not-allowed' : 'pointer',
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+          }}>← Back</button>
+          <div style={{ fontFamily: MONO, fontSize: 11, color: C.mute, letterSpacing: '0.1em' }}>
+            STEP {step} / 3
+          </div>
+          {step !== 3 ? (
+            <button onClick={next} disabled={(step === 1 && !date) || (step === 2 && !time)} className="bp-tap" style={{
+              padding: '10px 16px', borderRadius: 8,
+              background: ((step === 1 && date) || (step === 2 && time)) ? C.slate : `${C.slate}22`,
+              color: ((step === 1 && date) || (step === 2 && time)) ? C.bone : `${C.slate}66`,
+              border: 'none', fontFamily: DISPLAY, fontSize: 13, fontWeight: 600,
+              cursor: ((step === 1 && date) || (step === 2 && time)) ? 'pointer' : 'not-allowed',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+            }}>Continue →</button>
+          ) : <span />}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Hero ─────────────────────────────────────────────────── */
+function Hero() {
+  return (
+    <section style={{ background: C.bone, padding: '60px 22px 40px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.vermillion}>Contact</Eye>
+          <h1 className="bp-h1" style={{ color: C.slate, margin: '24px 0 0', maxWidth: 1000 }}>
+            Schedule a call.<br />Forty-five minutes, no slides.
+          </h1>
+          <p style={{
+            fontSize: 19, lineHeight: 1.55, color: C.mute,
+            maxWidth: 620, marginTop: 28, fontWeight: 400,
+          }}>
+            The fastest way to see if we're a fit. You talk to an engineer and a designer — not a sales team — and you walk away with a clear next step regardless.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Main two-column area ─────────────────────────────────── */
+function Main() {
+  const isMobile = useMediaQuery('(max-width: 900px)');
+  return (
+    <section id="schedule" style={{ background: C.bone, padding: '40px 22px 100px' }}>
+      <div style={{
+        maxWidth: 1240, margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1.3fr',
+        gap: isMobile ? 40 : 56,
+        alignItems: 'flex-start',
+      }}>
+        {/* left: what happens */}
+        <Reveal style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
+          <Eye>What happens on the call</Eye>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginTop: 22 }}>
+            {[
+              ['00:00', 'Hi, who are we', 'Quick context on Beneplus and on you. ~5 min.'],
+              ['00:05', 'What are you building', 'You walk us through the problem. We ask a lot of questions. ~20 min.'],
+              ['00:25', 'What we\'d do',   'A rough sketch of how we\'d approach it. ~10 min.'],
+              ['00:35', 'Next steps',         'Discovery scope, timing, budget — yes or no. ~10 min.'],
+            ].map(([t, h, b]) => (
+              <div key={t} style={{
+                display: 'grid', gridTemplateColumns: '64px 1fr', gap: 16,
+                paddingTop: 16, borderTop: `1px solid ${C.slate}12`,
+              }}>
+                <div style={{
+                  fontFamily: MONO, fontSize: 12, letterSpacing: '0.12em',
+                  color: C.vermillion, fontWeight: 600, paddingTop: 2,
+                }}>{t}</div>
+                <div>
+                  <div style={{
+                    fontFamily: DISPLAY, fontSize: 18, fontWeight: 600,
+                    letterSpacing: '-0.015em', color: C.slate,
+                  }}>{h}</div>
+                  <div style={{
+                    fontFamily: DISPLAY, fontSize: 14, color: C.mute,
+                    marginTop: 4, lineHeight: 1.55,
+                  }}>{b}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            marginTop: 36, padding: '22px 24px', borderRadius: 12,
+            background: C.paper, border: `1px solid ${C.slate}10`,
+          }}>
+            <div style={{
+              fontFamily: MONO, fontSize: 11, letterSpacing: '0.14em',
+              color: C.vermillion, fontWeight: 600, marginBottom: 14,
+            }}>OR REACH US DIRECTLY</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontFamily: MONO, fontSize: 14, color: C.slate, letterSpacing: '0.02em' }}>
+              <span><span style={{ color: C.mute }}>e ·</span> hello@beneplus.dev</span>
+              <span><span style={{ color: C.mute }}>p ·</span> +1 415 555 0117</span>
+              <span><span style={{ color: C.mute }}>a ·</span> 215 Folsom St, SF 94105</span>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* right: scheduler */}
+        <Reveal delay={120}>
+          <Scheduler />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ─── FAQ ──────────────────────────────────────────────────── */
+function FAQ() {
+  const qs = [
+    ['Is the intro call really free?', 'Yes. No deck, no follow-up sales sequence. We\'re trying to find out if we\'re a fit as fast as you are.'],
+    ['Who shows up to the call?', 'An engineer and a designer — usually the people who would actually be doing the work if we move forward.'],
+    ['Do you sign NDAs?', 'Yes, mutual NDAs upfront if you\'d like one. Send your template, or we\'ll send ours.'],
+    ['How fast can you start?', 'Most engagements start within 2–4 weeks of the intro call. Urgent timelines, we\'ll be honest about.'],
+    ['What\'s a typical budget?', 'Discovery is fixed: $18–28k for two weeks. Builds range from $75k to $500k+ depending on scope.'],
+    ['Do you take equity?', 'Occasionally, for the right early-stage founders. Most of our work is cash + retainer.'],
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.slate, color: C.bone }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.vermillion}>FAQ</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.bone, margin: '24px 0 0' }}>
+            Common questions.
+          </h2>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-2" style={{ marginTop: 48, gap: 18 }}>
+          {qs.map(([q, a], i) => (
+            <Reveal key={q} delay={i * 70} style={{
+              background: C.slate2, borderRadius: 14, padding: 28,
+              border: `1px solid ${C.slate3}`,
+              transition: 'border-color 220ms ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = C.vermillion + '88'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = C.slate3}
+            >
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 20, fontWeight: 600,
+                letterSpacing: '-0.02em', color: C.bone,
+              }}>{q}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 15, lineHeight: 1.6, color: C.mute,
+                marginTop: 12, fontWeight: 400,
+              }}>{a}</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  return (
+    <PageShell active="contact">
+      <Hero />
+      <Main />
+      <FAQ />
+    </PageShell>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

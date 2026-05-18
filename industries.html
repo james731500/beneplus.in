@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Industries — Beneplus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#EEEAE0" />
+<meta name="description" content="Sixteen industries we know cold — patterns we've shipped, regulators we've dealt with, integrations we've already written." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #EEEAE0;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    color: #0A0E18;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: #FF5A35; color: #EEEAE0; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="brand.jsx"></script>
+<script type="text/babel" src="site.jsx"></script>
+<script type="text/babel">
+
+const INDUSTRIES = [
+  ['automotive',    'Automotive',         'Connected-car platforms, dealer tooling, fleet ops.',                  '14',  ['Telematics', 'Dealer SaaS', 'Fleet']],
+  ['b2b',           'B2B Software',       'Workflow SaaS, internal tooling, dev-platform products.',              '38',  ['SaaS', 'Internal tools', 'Platforms']],
+  ['healthcare',    'Healthcare',         'HIPAA-grade patient apps, intake, EHR integrations.',                  '22',  ['Patient apps', 'EHR', 'Telehealth']],
+  ['education',     'Education',          'LMS, tutoring marketplaces, K-12 and higher-ed.',                      '11',  ['LMS', 'Tutoring', 'EdTech']],
+  ['ecommerce',     'Ecommerce',          'Shopify, headless, B2B catalogs, custom storefronts.',                 '46',  ['Shopify', 'Headless', 'B2B']],
+  ['food',          'Food',               'Restaurant ordering, kitchen ops, delivery logistics.',                '9',   ['POS', 'Delivery', 'Loyalty']],
+  ['travel',        'Travel',             'Booking flows, itineraries, OTA integrations.',                        '12',  ['Booking', 'OTA', 'Itinerary']],
+  ['fashion',       'Fashion & Apparel',  'Direct-to-consumer storefronts, drops, AR try-on.',                    '8',   ['DTC', 'Drops', 'AR try-on']],
+  ['crm',           'CRM Development',    'Sales tooling, custom CRM, integration into the stack.',               '17',  ['Custom CRM', 'Integrations', 'Sales']],
+  ['logistics',     'Logistics',          'Real-time tracking, route optimization, warehouse ops.',               '21',  ['Tracking', 'Routing', 'WMS']],
+  ['manufacturing', 'Manufacturing',      'MES, factory dashboards, IoT instrumentation.',                        '7',   ['MES', 'IoT', 'Dashboards']],
+  ['legal',         'Legal',              'Practice management, document workflow, secure portals.',              '6',   ['DMS', 'Workflow', 'Portals']],
+  ['agriculture',   'Agriculture',        'Crop monitoring, agri-marketplaces, supply chain.',                    '5',   ['AgTech', 'Marketplace', 'Supply']],
+  ['finance',       'Finance',            'Lending apps, wealth platforms, payment infrastructure.',              '29',  ['Lending', 'WealthTech', 'Payments']],
+  ['realestate',    'Real Estate',        'Listings, virtual tours, broker tooling, PropTech.',                   '13',  ['Listings', 'PropTech', 'Tours']],
+  ['hospitality',   'Hospitality',        'PMS, guest apps, loyalty, F&B integrations.',                          '10',  ['PMS', 'Guest app', 'Loyalty']],
+];
+
+/* ─── Hero ─────────────────────────────────────────────────── */
+function Hero() {
+  return (
+    <section style={{ background: C.bone, padding: '60px 22px 80px' }}>
+      <div className="bp-hero" style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.vermillion}>Industries</Eye>
+          <h1 className="bp-h1" style={{ color: C.slate, margin: '24px 0 0', maxWidth: 880 }}>
+            Sixteen industries.<br />Patterns we know cold.
+          </h1>
+          <p style={{
+            fontSize: 19, lineHeight: 1.55, color: C.mute,
+            maxWidth: 540, marginTop: 28, fontWeight: 400,
+          }}>
+            We don't pretend domain expertise where we don't have it. Below is where we do — patterns we've shipped before, regulators we've dealt with, integrations we've already written.
+          </p>
+        </Reveal>
+        <Reveal delay={120} className="bp-hero-mark" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Mark size={260} animated />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Industry grid ────────────────────────────────────────── */
+function Grid() {
+  return (
+    <section className="bp-pad" style={{ background: C.slate, color: C.bone }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal className="bp-row" style={{ marginBottom: 48 }}>
+          <div>
+            <Eye color={C.vermillion}>The full list</Eye>
+            <h2 className="bp-h2-xl" style={{ color: C.bone, margin: '24px 0 0', maxWidth: 760 }}>
+              Sixteen rooms.<br />Same studio.
+            </h2>
+          </div>
+          <div style={{
+            fontFamily: MONO, fontSize: 12, letterSpacing: '0.12em',
+            color: C.mute, fontWeight: 500,
+          }}>268 PROJECTS SHIPPED · 16 VERTICALS</div>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-4" style={{ gap: 14 }}>
+          {INDUSTRIES.map(([iconName, name, desc, count, tags], i) => (
+            <Reveal key={name} delay={i * 30} as="a" href="contact.html" style={{
+              background: C.slate2, border: `1px solid ${C.slate3}`,
+              borderRadius: 14, padding: 22,
+              textDecoration: 'none', color: C.bone,
+              display: 'flex', flexDirection: 'column', gap: 16,
+              minHeight: 280,
+              transition: 'border-color 220ms ease, transform 220ms ease, background 220ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = C.vermillion;
+              e.currentTarget.style.transform = 'translateY(-3px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = C.slate3;
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Icon name={iconName} size={48} color={C.bone} accent={C.accent} />
+                <span style={{
+                  fontFamily: MONO, fontSize: 10, letterSpacing: '0.12em',
+                  color: C.mute, paddingTop: 6,
+                }}>{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontFamily: DISPLAY, fontSize: 20, fontWeight: 600,
+                  letterSpacing: '-0.02em', color: C.bone,
+                }}>{name}</div>
+                <p style={{
+                  fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.5,
+                  color: C.mute, marginTop: 8, fontWeight: 400,
+                }}>{desc}</p>
+              </div>
+              <div style={{
+                display: 'flex', gap: 6, flexWrap: 'wrap',
+                paddingTop: 12, borderTop: `1px solid ${C.slate3}`,
+              }}>
+                {tags.map((t) => (
+                  <span key={t} style={{
+                    fontFamily: MONO, fontSize: 10, color: C.mute,
+                    padding: '4px 8px', border: `1px solid ${C.slate3}`,
+                    borderRadius: 4, letterSpacing: '0.04em',
+                  }}>{t}</span>
+                ))}
+              </div>
+              <div style={{
+                fontFamily: MONO, fontSize: 10, letterSpacing: '0.12em',
+                color: C.vermillion, fontWeight: 600,
+              }}>{count} PROJECTS · READ MORE →</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── What we bring to every industry ────────────────────── */
+function What() {
+  const items = [
+    ['Compliance literacy', 'HIPAA, PCI, GDPR, SOC 2 — we\'ve worked under all of them. We won\'t pretend a regulation away.'],
+    ['Domain interviews',   'Every engagement starts with operator interviews. We learn your workflow before we propose anything.'],
+    ['Vendor integrations', 'A library of pre-built integrations for the systems your industry already runs on.'],
+    ['Production support',  'We don\'t hand off and disappear. On-call, observability, and incident response from week one.'],
+  ];
+  return (
+    <section className="bp-pad" style={{ background: C.bone }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye>What we bring to every industry</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.slate, margin: '24px 0 0', maxWidth: 760 }}>
+            The same four things,<br />every time.
+          </h2>
+        </Reveal>
+
+        <div className="bp-grid bp-grid-4" style={{ marginTop: 56, gap: 18 }}>
+          {items.map(([t, b], i) => (
+            <Reveal key={t} delay={i * 80} style={{
+              background: C.paper, borderRadius: 14, padding: 30,
+              border: `1px solid ${C.slate}10`,
+              display: 'flex', flexDirection: 'column', gap: 14,
+              minHeight: 260,
+              transition: 'border-color 220ms ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = C.vermillion + '55'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = C.slate + '10'}
+            >
+              <div style={{
+                fontFamily: MONO, fontSize: 11, letterSpacing: '0.14em',
+                color: C.vermillion, fontWeight: 600,
+              }}>0{i + 1}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 22, fontWeight: 600,
+                letterSpacing: '-0.02em', color: C.slate,
+              }}>{t}</div>
+              <div style={{
+                fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.6, color: C.mute,
+              }}>{b}</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── CTA ─────────────────────────────────────────────────── */
+function CTA() {
+  return (
+    <section style={{ background: C.vermillion, padding: '100px 22px', color: C.slate }}>
+      <div className="bp-split" style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <Reveal>
+          <Eye color={C.slate}>Don't see your industry?</Eye>
+          <h2 className="bp-h2-xl" style={{ color: C.slate, margin: '24px 0 0', maxWidth: 720 }}>
+            We'll be honest<br />about the fit.
+          </h2>
+          <p style={{
+            fontSize: 18, lineHeight: 1.55, color: C.slate, opacity: 0.8,
+            maxWidth: 540, marginTop: 22, fontWeight: 400,
+          }}>
+            If your space isn't one we've worked in, we'll say so — and either dig in to learn, or point you to a studio that's a better match.
+          </p>
+        </Reveal>
+        <Reveal delay={120} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <a href="contact.html" className="bp-btn" style={{
+            background: C.slate, color: C.bone,
+            padding: '18px 28px', fontSize: 16,
+          }}>Have a conversation <span style={{ fontFamily: MONO }}>→</span></a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  return (
+    <PageShell active="industries">
+      <Hero />
+      <Grid />
+      <What />
+      <CTA />
+    </PageShell>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
